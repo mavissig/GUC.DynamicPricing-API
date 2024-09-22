@@ -1,0 +1,714 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API для работы с динамическим ценообразованием",
+        "title": "DynamicPricing-API",
+        "contact": {
+            "name": "API Support(Егор)",
+            "url": "https://t.me/senior_stepik"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "http://opensource.org/licenses/MIT"
+        },
+        "version": "1.0"
+    },
+    "host": "127.0.0.1:8080",
+    "basePath": "/api/v1",
+    "paths": {
+        "/api/v1/images": {
+            "post": {
+                "description": "Добавляет картинку в базу данных и прописывает ее товару в image_id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "Добавить картинку",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id товара",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном добавлении"
+                    },
+                    "400": {
+                        "description": "Ошибка при добавлении"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Удаляет картинку по id картинки",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "Удалить картинку",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id картинки (uuid)",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном удалении"
+                    },
+                    "400": {
+                        "description": "Ошибка при удалении"
+                    }
+                }
+            }
+        },
+        "/client": {
+            "get": {
+                "description": "Получить клиентов по имени и фамилии или всех клиентов",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "client"
+                ],
+                "summary": "Получить клиентов",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "имя клиента",
+                        "name": "name",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "фамилия клиента",
+                        "name": "surname",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "страница",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "количество клиентов на странице",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном запросе"
+                    },
+                    "400": {
+                        "description": "Ошибка при запросе"
+                    },
+                    "404": {
+                        "description": "Клиенты не найдены"
+                    }
+                }
+            },
+            "post": {
+                "description": "Добавляет нового клиента",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "client"
+                ],
+                "summary": "Добавить нового клиента",
+                "parameters": [
+                    {
+                        "description": "Информация о клиенте",
+                        "name": "client",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Client"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном добавлении"
+                    },
+                    "400": {
+                        "description": "Ошибка при добавлении"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Удаляет клиента по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "client"
+                ],
+                "summary": "Удалить клиента",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id клиента",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном удалении"
+                    },
+                    "400": {
+                        "description": "Ошибка при удалении"
+                    }
+                }
+            }
+        },
+        "/client/address": {
+            "put": {
+                "description": "Изменяет адрес клиента по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "client"
+                ],
+                "summary": "Изменить адрес клиента",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id клиента",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "description": "Адрес клиента",
+                        "name": "address",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Address"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном изменении адреса"
+                    },
+                    "400": {
+                        "description": "Ошибка при изменении адреса"
+                    }
+                }
+            }
+        },
+        "/images": {
+            "get": {
+                "description": "Получает картинку по id картинки",
+                "consumes": [
+                    "image/jpeg"
+                ],
+                "produces": [
+                    "image/jpeg"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "Получить картинку",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id картинки (uuid)",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном запросе"
+                    },
+                    "400": {
+                        "description": "Ошибка при запросе"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Изменяет картинку по id картинки",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "Изменить картинку",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id картинки (uuid)",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "новая картинка",
+                        "name": "image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном изменении"
+                    },
+                    "400": {
+                        "description": "Ошибка при изменении"
+                    }
+                }
+            }
+        },
+        "/images/product": {
+            "get": {
+                "description": "Получает картинку по id товара",
+                "consumes": [
+                    "application/octet-stream"
+                ],
+                "tags": [
+                    "images"
+                ],
+                "summary": "Получить картинку",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id товара",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном запросе"
+                    },
+                    "400": {
+                        "description": "Ошибка при запросе"
+                    }
+                }
+            }
+        },
+        "/product": {
+            "get": {
+                "description": "Получает товар по id или все товары",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "Получить товар",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id товара",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном запросе"
+                    },
+                    "400": {
+                        "description": "Ошибка при запросе"
+                    },
+                    "404": {
+                        "description": "Товар не найден"
+                    }
+                }
+            },
+            "post": {
+                "description": "Добавляет новый товар",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "Добавить новый товар",
+                "parameters": [
+                    {
+                        "description": "Информация о товаре",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном добавлении"
+                    },
+                    "400": {
+                        "description": "Ошибка при добавлении"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Удаляет товар по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "Удалить товар",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id товара",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном удалении"
+                    },
+                    "400": {
+                        "description": "Ошибка при удалении"
+                    }
+                }
+            }
+        },
+        "/product/decrement": {
+            "patch": {
+                "description": "Уменьшает количество товара на складе",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "product"
+                ],
+                "summary": "Уменьшить количество товара",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id товара",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "количество товара для уменьшения",
+                        "name": "n",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном запросе"
+                    },
+                    "400": {
+                        "description": "Ошибка при запросе"
+                    },
+                    "404": {
+                        "description": "Товар не найден"
+                    }
+                }
+            }
+        },
+        "/supplier": {
+            "get": {
+                "description": "Получить поставщика по id или всех",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Получить поставщика",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id поставщика",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "номер страницы",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "размер страницы",
+                        "name": "pageSize",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном запросе"
+                    },
+                    "400": {
+                        "description": "Ошибка при запросе"
+                    },
+                    "404": {
+                        "description": "Поставщики не найдены"
+                    }
+                }
+            },
+            "post": {
+                "description": "Принимает JSON объект поставщика и сохраняет его в базу данных",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Добавить нового поставщика",
+                "parameters": [
+                    {
+                        "description": "Информация о поставщике",
+                        "name": "supplier",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Supplier"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном добавлении"
+                    },
+                    "400": {
+                        "description": "Ошибка валидации или добавления"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Удалить поставщика по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Удалить поставщика",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id поставщика",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном удалении"
+                    },
+                    "400": {
+                        "description": "Ошибка при удалении"
+                    }
+                }
+            }
+        },
+        "/supplier/address": {
+            "put": {
+                "description": "Изменить адрес поставщика по id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "suppliers"
+                ],
+                "summary": "Изменить адрес поставщика",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id поставщика",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Адрес поставщика",
+                        "name": "address",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Address"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Сообщение об успешном изменении"
+                    },
+                    "400": {
+                        "description": "Ошибка при запросе"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Address": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "country": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "street": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Client": {
+            "type": "object",
+            "properties": {
+                "addressId": {
+                    "type": "integer"
+                },
+                "birthday": {
+                    "type": "string"
+                },
+                "clientName": {
+                    "type": "string"
+                },
+                "clientSurname": {
+                    "type": "string"
+                },
+                "gender": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "registrationDate": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Product": {
+            "type": "object",
+            "properties": {
+                "availableStock": {
+                    "description": "число закупленных экземпляров товара",
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "imageId": {
+                    "type": "string"
+                },
+                "lastUpdateDate": {
+                    "description": "число последней закупки",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "supplierId": {
+                    "type": "integer"
+                }
+            }
+        },
+        "domain.Supplier": {
+            "type": "object",
+            "properties": {
+                "addressId": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

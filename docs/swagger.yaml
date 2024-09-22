@@ -1,0 +1,471 @@
+basePath: /api/v1
+definitions:
+  domain.Address:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      id:
+        type: integer
+      street:
+        type: string
+    type: object
+  domain.Client:
+    properties:
+      addressId:
+        type: integer
+      birthday:
+        type: string
+      clientName:
+        type: string
+      clientSurname:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      registrationDate:
+        type: string
+    type: object
+  domain.Product:
+    properties:
+      availableStock:
+        description: число закупленных экземпляров товара
+        type: integer
+      category:
+        type: string
+      id:
+        type: integer
+      imageId:
+        type: string
+      lastUpdateDate:
+        description: число последней закупки
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      supplierId:
+        type: integer
+    type: object
+  domain.Supplier:
+    properties:
+      addressId:
+        type: integer
+      id:
+        type: integer
+      name:
+        type: string
+      phoneNumber:
+        type: string
+    type: object
+host: 127.0.0.1:8080
+info:
+  contact:
+    name: API Support(Егор)
+    url: https://t.me/senior_stepik
+  description: API для работы с динамическим ценообразованием
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  title: DynamicPricing-API
+  version: "1.0"
+paths:
+  /api/v1/images:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет картинку по id картинки
+      parameters:
+      - description: id картинки (uuid)
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+        "400":
+          description: Ошибка при удалении
+      summary: Удалить картинку
+      tags:
+      - images
+    post:
+      consumes:
+      - application/json
+      description: Добавляет картинку в базу данных и прописывает ее товару в image_id
+      parameters:
+      - description: id товара
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном добавлении
+        "400":
+          description: Ошибка при добавлении
+      summary: Добавить картинку
+      tags:
+      - images
+  /client:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет клиента по id
+      parameters:
+      - description: id клиента
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+        "400":
+          description: Ошибка при удалении
+      summary: Удалить клиента
+      tags:
+      - client
+    get:
+      consumes:
+      - application/json
+      description: Получить клиентов по имени и фамилии или всех клиентов
+      parameters:
+      - description: имя клиента
+        in: query
+        name: name
+        type: string
+      - description: фамилия клиента
+        in: query
+        name: surname
+        type: string
+      - description: страница
+        in: query
+        name: page
+        type: string
+      - description: количество клиентов на странице
+        in: query
+        name: pageSize
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном запросе
+        "400":
+          description: Ошибка при запросе
+        "404":
+          description: Клиенты не найдены
+      summary: Получить клиентов
+      tags:
+      - client
+    post:
+      consumes:
+      - application/json
+      description: Добавляет нового клиента
+      parameters:
+      - description: Информация о клиенте
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Client'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном добавлении
+        "400":
+          description: Ошибка при добавлении
+      summary: Добавить нового клиента
+      tags:
+      - client
+  /client/address:
+    put:
+      consumes:
+      - application/json
+      description: Изменяет адрес клиента по id
+      parameters:
+      - description: id клиента
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: Адрес клиента
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном изменении адреса
+        "400":
+          description: Ошибка при изменении адреса
+      summary: Изменить адрес клиента
+      tags:
+      - client
+  /images:
+    get:
+      consumes:
+      - image/jpeg
+      description: Получает картинку по id картинки
+      parameters:
+      - description: id картинки (uuid)
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - image/jpeg
+      responses:
+        "200":
+          description: Сообщение об успешном запросе
+        "400":
+          description: Ошибка при запросе
+      summary: Получить картинку
+      tags:
+      - images
+    patch:
+      consumes:
+      - application/json
+      description: Изменяет картинку по id картинки
+      parameters:
+      - description: id картинки (uuid)
+        in: query
+        name: id
+        required: true
+        type: string
+      - description: новая картинка
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном изменении
+        "400":
+          description: Ошибка при изменении
+      summary: Изменить картинку
+      tags:
+      - images
+  /images/product:
+    get:
+      consumes:
+      - application/octet-stream
+      description: Получает картинку по id товара
+      parameters:
+      - description: id товара
+        in: query
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Сообщение об успешном запросе
+        "400":
+          description: Ошибка при запросе
+      summary: Получить картинку
+      tags:
+      - images
+  /product:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет товар по id
+      parameters:
+      - description: id товара
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+        "400":
+          description: Ошибка при удалении
+      summary: Удалить товар
+      tags:
+      - product
+    get:
+      consumes:
+      - application/json
+      description: Получает товар по id или все товары
+      parameters:
+      - description: id товара
+        in: query
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном запросе
+        "400":
+          description: Ошибка при запросе
+        "404":
+          description: Товар не найден
+      summary: Получить товар
+      tags:
+      - product
+    post:
+      consumes:
+      - application/json
+      description: Добавляет новый товар
+      parameters:
+      - description: Информация о товаре
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном добавлении
+        "400":
+          description: Ошибка при добавлении
+      summary: Добавить новый товар
+      tags:
+      - product
+  /product/decrement:
+    patch:
+      consumes:
+      - application/json
+      description: Уменьшает количество товара на складе
+      parameters:
+      - description: id товара
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: количество товара для уменьшения
+        in: query
+        name: "n"
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном запросе
+        "400":
+          description: Ошибка при запросе
+        "404":
+          description: Товар не найден
+      summary: Уменьшить количество товара
+      tags:
+      - product
+  /supplier:
+    delete:
+      consumes:
+      - application/json
+      description: Удалить поставщика по id
+      parameters:
+      - description: id поставщика
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном удалении
+        "400":
+          description: Ошибка при удалении
+      summary: Удалить поставщика
+      tags:
+      - suppliers
+    get:
+      consumes:
+      - application/json
+      description: Получить поставщика по id или всех
+      parameters:
+      - description: id поставщика
+        in: query
+        name: id
+        type: integer
+      - description: номер страницы
+        in: query
+        name: page
+        type: integer
+      - description: размер страницы
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном запросе
+        "400":
+          description: Ошибка при запросе
+        "404":
+          description: Поставщики не найдены
+      summary: Получить поставщика
+      tags:
+      - suppliers
+    post:
+      consumes:
+      - application/json
+      description: Принимает JSON объект поставщика и сохраняет его в базу данных
+      parameters:
+      - description: Информация о поставщике
+        in: body
+        name: supplier
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Supplier'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном добавлении
+        "400":
+          description: Ошибка валидации или добавления
+      summary: Добавить нового поставщика
+      tags:
+      - suppliers
+  /supplier/address:
+    put:
+      consumes:
+      - application/json
+      description: Изменить адрес поставщика по id
+      parameters:
+      - description: id поставщика
+        in: query
+        name: id
+        type: integer
+      - description: Адрес поставщика
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Address'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Сообщение об успешном изменении
+        "400":
+          description: Ошибка при запросе
+      summary: Изменить адрес поставщика
+      tags:
+      - suppliers
+swagger: "2.0"

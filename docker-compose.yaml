@@ -1,0 +1,14 @@
+services:
+  api:
+    build:
+      context: .
+    image: guc-dp-api:latest
+    container_name: api
+    networks:
+      - dnet
+    ports:
+      - "8081:80"
+
+networks:
+  dnet:
+    name: dnet
