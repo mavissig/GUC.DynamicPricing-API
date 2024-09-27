@@ -1,8 +1,11 @@
 #!/bin/sh
 
-git clone https://github.com/confluentinc/librdkafka.git
-cd librdkafka
-./configure
-make
-make install
-CC="musl-gcc -static" ./configure --exec-prefix=/musl && make
+apt-get update && apt-get install -y musl-tools
+
+ln -s /usr/bin/musl-gcc /usr/local/bin/musl-gcc
+
+apt-get clean && rm -rf /var/lib/apt/lists/*
+
+go mod tidy
+
+CC=/usr/local/bin/musl-gcc go build --ldflags '-linkmode external -extldflags "-static"' -tags musl -o /app-run /app/cmd/api/main.go
