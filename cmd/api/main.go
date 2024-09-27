@@ -17,16 +17,27 @@ package main
 
 import (
 	"github.com/mavissig/GUC.DynamicPricing-API/internal/api/domain"
+	"github.com/mavissig/GUC.DynamicPricing-API/internal/api/repository"
+	"log"
 
+	repositoryRedis "github.com/mavissig/GUC.DynamicPricing-API/internal/api/repository/redis"
 	"github.com/mavissig/GUC.DynamicPricing-API/internal/api/transport"
-	thttp "github.com/mavissig/GUC.DynamicPricing-API/internal/api/transport/http"
+	httpSrv "github.com/mavissig/GUC.DynamicPricing-API/internal/api/transport/http-server"
+	kafkaClient "github.com/mavissig/GUC.DynamicPricing-API/internal/api/transport/kafka-client"
 )
 
 func main() {
 	transportCfg := transport.LoadConfig()
+	repositoryCfg := repository.LoadConfig()
 
-	useCase := domain.New()
+	storageRedis := repositoryRedis.New(repositoryCfg)
+	cKafka, err := kafkaClient.New(transportCfg)
+	if err != nil {
+		log.Fatal("[API][MAIN][KAFKA-CLIENT][NEW][ERROR]:")
+	}
 
-	serverHttp := thttp.New(transportCfg, useCase)
+	useCase := domain.New(cKafka, storageRedis)
+
+	serverHttp := httpSrv.New(transportCfg, useCase)
 	serverHttp.Run()
 }

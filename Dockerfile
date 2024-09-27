@@ -1,13 +1,19 @@
-FROM golang:1.22
-LABEL authors="admin"
+FROM golang:1.22-bullseye as builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
-RUN go mod download
+COPY . .
 
-COPY . ./
+RUN apt-get update && apt-get install -y musl-tools
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /app-run /app/cmd/api/main.go
+RUN ln -s /usr/bin/musl-gcc /usr/local/bin/musl-gcc
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN go mod tidy
+
+RUN CC=/usr/local/bin/musl-gcc go build --ldflags '-linkmode external -extldflags "-static"' -tags musl -o /app-run /app/cmd/api/main.go
+
+EXPOSE 8080
 
 CMD ["/app-run"]

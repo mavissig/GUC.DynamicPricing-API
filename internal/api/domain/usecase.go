@@ -1,13 +1,16 @@
 package domain
 
 type UseCase struct {
-	//clientRepo   ClientRepo
+	produce Producer
+	cache   Cache
 }
 
 func New(
-// clientRepo ClientRepo,
+	produce Producer,
+	cache Cache,
 ) *UseCase {
 	return &UseCase{
-		//clientRepo:   clientRepo,
+		produce: produce,
+		cache:   cache,
 	}
 }
