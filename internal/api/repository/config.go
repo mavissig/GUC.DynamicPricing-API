@@ -8,25 +8,19 @@ import (
 )
 
 type Config struct {
-	PG *PgConfig
+	PGRedis *RedisConfig
 }
 
-type PgConfig struct {
-	Name     string `envconfig:"DB_POSTGRES_NAME" required:"true"`
-	Host     string `envconfig:"DB_POSTGRES_HOST" required:"true"`
-	User     string `envconfig:"DB_POSTGRES_USER" required:"true"`
-	Password string `envconfig:"DB_POSTGRES_PASSWORD" required:"true"`
-	Port     string `envconfig:"DB_POSTGRES_PORT" required:"true"`
-
-	InitTables bool `envconfig:"DB_POSTGRES_INIT_TABLE" required:"true"`
-	ClearStart bool `envconfig:"DB_POSTGRES_CLEAR_START" required:"true"`
+type RedisConfig struct {
+	Address  string `envconfig:"DB_REDIS_ADDRESS" required:"true"`
+	Password string `envconfig:"DB_REDIS_PASSWORD" required:"true"`
 }
 
 func LoadConfig() *Config {
 	for _, fileName := range []string{".env.local", ".env.storage"} {
 		err := godotenv.Load(fileName)
 		if err != nil {
-			log.Println("[STORAGE][POSTGRES][CONFIG] ERROR: ", err)
+			log.Println("[API][TRANSPORT][CONFIG] WARN ", err)
 		}
 	}
 
@@ -36,7 +30,8 @@ func LoadConfig() *Config {
 		log.Fatalln(err)
 	}
 
-	fmt.Println(cfg)
+	fmt.Printf("[IMS]REDIS CONFIG: \n")
+	fmt.Printf("Address:       %s\n", cfg.PGRedis.Address)
 
 	return cfg
 }
